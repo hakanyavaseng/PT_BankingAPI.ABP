@@ -35,7 +35,7 @@ namespace Piton.Banking.Services.Accounts
         public async Task<AccountDto> CreateAsync(CreateUpdateAccountDto input)
         {
             //Customer check
-            Customer? customer = await CustomerManager.Repository.GetAsync(input.CustomerId);
+            Customer? customer = await CustomerManager.GetByIdAsync(input.CustomerId);
             if(customer is null)
                 throw new BusinessException("Customer not found"); // TODO: Localize
             
@@ -65,14 +65,18 @@ namespace Piton.Banking.Services.Accounts
             return ObjectMapper.Map<Account, AccountDto>(addedAccount);            
         }
 
-        public Task DeleteAsync(Guid id)
+        public async Task DeleteAsync(Guid id)
         {
-            throw new NotImplementedException();
+            Account? account = await AccountManager.Repository.GetAsync(id);
+            if(account is null)
+                throw new BusinessException("Account not found"); // TODO: Localize
+            await AccountManager.Repository.DeleteAsync(account);    
         }
 
         public Task<AccountDto> GetAsync(Guid id)
         {
             throw new NotImplementedException();
+            
         }
 
         public Task<PagedResultDto<AccountDto>> GetListAsync(PagedAndSortedResultRequestDto input)

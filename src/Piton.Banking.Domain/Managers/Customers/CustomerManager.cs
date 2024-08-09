@@ -3,16 +3,13 @@ using System;
 using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Domain.Repositories;
-using Volo.Abp.Domain.Services;
 
 namespace Piton.Banking.Managers.Customers
 {
-    public class CustomerManager : DomainService
+    public class CustomerManager : ExtendedDomainService<Customer,Guid>
     {
-        public IRepository<Customer, Guid> Repository { get; }
-        public CustomerManager(IRepository<Customer, Guid> repository)
+        public CustomerManager(IRepository<Customer, Guid> repository) : base(repository)
         {
-            Repository = repository;
         }
 
         public async Task<Customer> CreateAsync(Customer customer)
